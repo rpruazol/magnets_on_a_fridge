@@ -1,6 +1,5 @@
 * {
     box-sizing:border-box;
-    border: 1px solid red;
 }
 
 html, body {
@@ -24,4 +23,31 @@ html, body {
     position: absolute;
     background-color: none;
     letter-spacing: -5px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    left: 0;
+  }
+
+.dropdown-content a {
+    color: black;
+    padding: 6px 8px;
+    text-decoration: none;
+    display: block;
+}
+
+.letter-content {
+position: relative;
+display: inline-block;
+}
+
+.letter-content:hover .dropdown-content {
+    display: block;
+}
+
+a:active {    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }

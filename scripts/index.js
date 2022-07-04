@@ -1,11 +1,11 @@
 'use strict'
 
-
-
 const alphabet = {
     captitalLetters: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
     lowerCaseLetters: ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
 }
+
+let counter = 0;
 
 const root = document.getElementById("root")
 root.ondrop = drop_handler;
@@ -21,15 +21,10 @@ function dragover_handler(ev) {
 function generateLetter(letter){
     const letterElement = document.createElement('p')
     letterElement.setAttribute('class', 'letter')
-    letterElement.setAttribute('draggable', 'true')
-    letterElement.setAttribute('id', letter)
     const newLetter = document.createTextNode(letter)
     letterElement.append(newLetter)
     letterElement.style.color = randomColor()
-    addEventListeners(letterElement)
-    letterElement.style.top = `${randomNumber(window.innerHeight-150)}px`
-    letterElement.style.left = `${randomNumber(window.innerWidth-150)}px`
-    
+
     return letterElement
 }
 
@@ -41,10 +36,14 @@ function randomNumber(max, min=0){
     return Math.floor(Math.random() * (max - min) + min)
 }
 
-function render() {
+function render(root) {
     for(let i = 0; i<alphabet.captitalLetters.length; i++){
-        const newLetter = generateLetter(alphabet.captitalLetters[i])
-        root.appendChild(newLetter)
+        const parent = renderParent(root)
+        const newLetter = generateLetter(alphabet.captitalLetters[i], parent)
+        parent.appendChild(newLetter)
+        renderDropdown(parent, root)
+        parent.setAttribute('id', counter++)
+        counter++
     }
 }
 
@@ -82,4 +81,46 @@ function drop_handler(event) {
         return false;
 }
 
-render()
+function renderParent(parent){
+    //letter-content === dropdown
+    const root = document.createElement('div')
+    root.setAttribute('class', 'letter-content')
+    parent.appendChild(root)
+    addEventListeners(root)
+    root.style.top = `${randomNumber(window.innerHeight-150)}px`
+    root.style.left = `${randomNumber(window.innerWidth-150)}px`
+    root.setAttribute('draggable', 'true')
+    return root
+}
+
+function renderDropdown(parent, root){
+    // create dropdown and attach it to the letter
+//  <div class="dropdown-content">
+//    <a href="#">+</a>
+//    <a href="#">-</a>
+//  </div>
+    const divEl = document.createElement('div')
+    divEl.setAttribute('class', 'dropdown-content')
+    parent.appendChild(divEl)
+
+    const dupEl = document.createElement('a')
+    dupEl.textContent = '+'
+    dupEl.addEventListener("click", (() => {
+        const cloned = parent.cloneNode(true)
+        cloned.setAttribute('id', counter++ )
+        root.appendChild(cloned)
+        console.log(cloned)
+
+    }))
+    divEl.appendChild(dupEl)
+
+    const removeEl = document.createElement('a')
+    removeEl.textContent = '-'
+    removeEl.addEventListener("click", (() => {
+        parent.remove()
+    }))
+    divEl.appendChild(removeEl)
+}
+
+
+render(root)
