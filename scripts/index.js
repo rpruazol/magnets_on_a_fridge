@@ -27,6 +27,8 @@ function generateLetter(letter){
     letterElement.append(newLetter)
     letterElement.style.color = randomColor()
     addEventListeners(letterElement)
+    letterElement.style.top = `${randomNumber(1000)}px`
+    letterElement.style.left = `${randomNumber(1000)}px`
     
     return letterElement
 }
