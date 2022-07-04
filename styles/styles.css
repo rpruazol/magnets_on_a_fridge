@@ -5,5 +5,8 @@
 
 
 .letter{
-    
+    display: inline-block;
+    font-family: 'Candal', sans-serif;
+    font-size: 100px;
+    text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; 
 }
