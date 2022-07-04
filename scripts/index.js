@@ -8,7 +8,13 @@ const alphabet = {
 }
 
 const root = document.getElementById("root")
+root.ondrop = drop_handler;
+root.ondragover = dragover_handler;
 
+function dragover_handler(ev) {
+    ev.currentTarget.style.background = "lightblue";
+    ev.preventDefault();
+}
 
 
 
@@ -16,6 +22,7 @@ function generateLetter(letter){
     const letterElement = document.createElement('p')
     letterElement.setAttribute('class', 'letter')
     letterElement.setAttribute('draggable', 'true')
+    letterElement.setAttribute('id', letter)
     const newLetter = document.createTextNode(letter)
     letterElement.append(newLetter)
     letterElement.style.color = randomColor()
@@ -49,10 +56,11 @@ function onDragStart(event) {
 	if (target && target.nodeName == 'P') {
         // Store a ref. on the dragged elem
 	    const pSrc = target.textContent;
+        console.log(pSrc)
 	    // parkingSimulation.dragged = target;
 	    event.dropEffect = 'linkMove';
-	    event.dataTransfer.setData('text/uri-list', pSrc);
-	    event.dataTransfer.setData('text/plain', pSrc);
+	    event.dataTransfer.setData('text', pSrc);
+	    // event.dataTransfer.setData('text/plain', pSrc);
 
 	    // Make it half transparent
 	    event.target.style.opacity = .1;
@@ -64,6 +72,14 @@ function onDragEnd(event) {
 	    // Reset the transparency
 	    event.target.style.opacity = '';
 	}
+}
+
+function drop_handler(ev) {
+    ev.preventDefault();
+    console.log(ev.dataTransfer)
+    const data = ev.dataTransfer.getData("text");
+    console.log(data)
+    ev.target.appendChild(document.getElementById(data));
 }
 
 render()
