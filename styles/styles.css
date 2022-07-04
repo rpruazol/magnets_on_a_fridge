@@ -8,6 +8,8 @@ html, body {
 
 #root {
     height: 100%;
+    background-image: url('../public/refridgerator.jpeg');
+    background-size: cover;
 }
 
 .letter{
