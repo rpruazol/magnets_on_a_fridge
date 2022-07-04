@@ -15,5 +15,9 @@ html, body {
     font-family: 'Candal', sans-serif;
     font-size: 100px;
     text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; 
-    margin: 1px;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    background-color: none;
+    letter-spacing: -5px;
 }
