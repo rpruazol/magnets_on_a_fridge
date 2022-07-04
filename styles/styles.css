@@ -1,0 +1,19 @@
+* {
+    box-sizing:border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+.letter{
+    display: inline-block;
+    font-family: 'Candal', sans-serif;
+    font-size: 100px;
+    text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; 
+    margin: 1px;
+}
