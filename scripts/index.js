@@ -12,8 +12,8 @@ root.ondrop = drop_handler;
 root.ondragover = dragover_handler;
 
 function dragover_handler(ev) {
-    ev.currentTarget.style.background = "lightblue";
     ev.preventDefault();
+    return false
 }
 
 
@@ -27,6 +27,8 @@ function generateLetter(letter){
     letterElement.append(newLetter)
     letterElement.style.color = randomColor()
     addEventListeners(letterElement)
+    letterElement.style.top = `${randomNumber(window.innerHeight-150)}px`
+    letterElement.style.left = `${randomNumber(window.innerWidth-150)}px`
     
     return letterElement
 }
@@ -35,8 +37,8 @@ function randomColor(){
     return `rgb(${randomNumber(255)}, ${randomNumber(255)}, ${randomNumber(255)})`
 }
 
-function randomNumber(num){
-    return Math.floor(Math.random() * num)
+function randomNumber(max, min=0){
+    return Math.floor(Math.random() * (max - min) + min)
 }
 
 function render() {
@@ -48,38 +50,36 @@ function render() {
 
 function addEventListeners(element) {
     element.addEventListener('dragstart', onDragStart);
-	element.addEventListener('dragend', onDragEnd);
+	element.addEventListener('dragend', onDragEnd, false);
+    element.addEventListener('dragover', dragover_handler, false)
+    element.addEventListener('drop', drop_handler, false)
 }
 
 function onDragStart(event) {
     let target = event.target;
-	if (target && target.nodeName == 'P') {
-        // Store a ref. on the dragged elem
-	    const pSrc = target.textContent;
-        console.log(pSrc)
-	    // parkingSimulation.dragged = target;
-	    event.dropEffect = 'linkMove';
-	    event.dataTransfer.setData('text', pSrc);
-	    // event.dataTransfer.setData('text/plain', pSrc);
-
-	    // Make it half transparent
-	    event.target.style.opacity = .1;
-	}
+    var style = window.getComputedStyle(event.target, null);
+    var targetValue = (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY) + ',' + target.id;
+    console.log(targetValue)
+    event.dataTransfer.setData("text/plain",
+    (targetValue))
 }
 
 function onDragEnd(event) {
-	if (event.target && event.target.nodeName == 'P') {
+	if (event.target && event.target.nodeName == 'p') {
 	    // Reset the transparency
 	    event.target.style.opacity = '';
 	}
 }
 
-function drop_handler(ev) {
-    ev.preventDefault();
-    console.log(ev.dataTransfer)
-    const data = ev.dataTransfer.getData("text");
-    console.log(data)
-    ev.target.appendChild(document.getElementById(data));
+function drop_handler(event) {
+        console.log(event.dataTransfer.getData("text/plain"))
+        var targetData = event.dataTransfer.getData("text/plain").split(',');
+        console.log(targetData)
+        var dm = document.getElementById(targetData[2]);
+        dm.style.left = (event.clientX + parseInt(targetData[0],10)) + 'px';
+        dm.style.top = (event.clientY + parseInt(targetData[1],10)) + 'px';
+        event.preventDefault();
+        return false;
 }
 
 render()
