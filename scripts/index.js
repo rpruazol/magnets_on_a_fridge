@@ -1,9 +1,6 @@
 'use strict'
 
-const alphabet = {
-    captitalLetters: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
-    lowerCaseLetters: ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-}
+const letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
 let counter = 0;
 
@@ -36,16 +33,7 @@ function randomNumber(max, min=0){
     return Math.floor(Math.random() * (max - min) + min)
 }
 
-function render(root) {
-    for(let i = 0; i<alphabet.captitalLetters.length; i++){
-        const parent = renderParent(root)
-        const newLetter = generateLetter(alphabet.captitalLetters[i], parent)
-        parent.appendChild(newLetter)
-        renderDropdown(parent, root)
-        parent.setAttribute('id', counter++)
-        counter++
-    }
-}
+
 
 function addEventListeners(element) {
     element.addEventListener('dragstart', onDragStart);
@@ -94,11 +82,6 @@ function renderParent(parent){
 }
 
 function renderDropdown(parent, root){
-    // create dropdown and attach it to the letter
-//  <div class="dropdown-content">
-//    <a href="#">+</a>
-//    <a href="#">-</a>
-//  </div>
     const divEl = document.createElement('div')
     divEl.setAttribute('class', 'dropdown-content')
     parent.appendChild(divEl)
@@ -106,11 +89,11 @@ function renderDropdown(parent, root){
     const dupEl = document.createElement('a')
     dupEl.textContent = '+'
     dupEl.addEventListener("click", (() => {
-        const cloned = parent.cloneNode(true)
-        cloned.setAttribute('id', counter++ )
-        root.appendChild(cloned)
-        console.log(cloned)
-
+        // const cloned = parent.cloneNode(true)
+        // cloned.setAttribute('id', counter++ )
+        // root.appendChild(cloned)
+        console.log(parent.childNodes[0].textContent)
+        render(root, [parent.childNodes[0].textContent])
     }))
     divEl.appendChild(dupEl)
 
@@ -122,5 +105,16 @@ function renderDropdown(parent, root){
     divEl.appendChild(removeEl)
 }
 
+function render(root, alphabet) {
+    for(let i = 0; i<alphabet.length; i++){
+        const parent = renderParent(root)
+        const newLetter = generateLetter(alphabet[i], parent)
+        parent.appendChild(newLetter)
+        renderDropdown(parent, root)
+        parent.setAttribute('id', counter++)
+        counter++
+    }
+}
 
-render(root)
+
+render(root, letters)
