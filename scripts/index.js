@@ -33,7 +33,6 @@ function dragover_handler(ev) {
 }
 
 
-
 function generateLetter(letter){
     const letterElement = document.createElement('p')
     letterElement.setAttribute('class', 'letter')
@@ -51,7 +50,6 @@ function randomColor(){
 function randomNumber(max, min=0){
     return Math.floor(Math.random() * (max - min) + min)
 }
-
 
 
 function addEventListeners(element) {

@@ -9,8 +9,8 @@ html, body {
 
 #root {
     height: 95%;
-    background-image: url('../public/refridgerator.png');
-    background-size: 100% 100%;
+    background-image: url('../images/refridgerator.png');
+    background-size: 100% 95%;
     /* overflow: hidden; */
 }
 
@@ -35,10 +35,10 @@ html, body {
   }
 
 .dropdown-content a {
+    border: solid 1px;
     color: black;
     padding: 6px 8px;
     text-decoration: none;
-    display: block;
 }
 
 .letter-content {
@@ -55,17 +55,32 @@ a:active {    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 
 header {
     display: flex;
-    background-color: whitesmoke;
-
+    overflow: hidden;
+    background-color: #f1f1f1;
+    padding: 20px 10px;
     justify-content: space-between;
 }
 
-header a {
-    font-family: sans-serif;
+.header-left a {
+    background-color: lightgray;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
-    height: 0;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
     margin-left: 15px;
     line-height: 55px;
+    border-radius: 4px;
+}
+
+.header-left a:active {
+    background-color: white;
+    color: white;
+}
+
+.header-right img{
+    padding: 15px;
 }
 
 header img {
@@ -76,6 +91,36 @@ header img:hover{
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
+
 header a:hover{
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #ddd;
+    color: black;
+}
+
+.about-section {
+    padding: 50px;
+    text-align: center;
+    background-color: #474e5d;
+    color: white;
+  }
+
+.profile {
+margin: auto;
+width: 60%;
+margin-bottom: 16px;
+padding: 10px;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    margin: 8px;
+    text-align: center;
+  }
+
+.card img {
+    width:25%;
+}
+
+.container {
+padding: 10px 25px;
 }
