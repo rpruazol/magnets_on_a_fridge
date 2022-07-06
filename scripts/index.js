@@ -62,6 +62,7 @@ function addEventListeners(element) {
 }
 
 function onDragStart(event) {
+    console.log(event)
     let target = event.target;
     var style = window.getComputedStyle(event.target, null);
     var targetValue = (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY) + ',' + target.id;
@@ -82,6 +83,7 @@ function drop_handler(event) {
         var targetData = event.dataTransfer.getData("text/plain").split(',');
         console.log(targetData)
         var dm = document.getElementById(targetData[2]);
+        console.log(dm)
         dm.style.left = (event.clientX + parseInt(targetData[0],10)) + 'px';
         dm.style.top = (event.clientY + parseInt(targetData[1],10)) + 'px';
         event.preventDefault();
@@ -128,6 +130,7 @@ function render(root, alphabet) {
     if(localStorage.getItem('letters'))
         {
             console.log('localstorage found')
+            addEventListeners(root)
             const rawLetterData = JSON.parse(localStorage.getItem('letters'))
             console.log(rawLetterData)
             rawLetterData.forEach(value => {
