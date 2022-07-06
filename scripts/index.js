@@ -4,9 +4,28 @@ const letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"
 
 let counter = 0;
 
-const root = document.getElementById("root")
+const root = document.getElementById('root')
 root.ondrop = drop_handler;
 root.ondragover = dragover_handler;
+
+document.getElementById('reset').addEventListener('click', () => {
+    counter = 0;
+    console.log('reset')
+    localStorage.clear()
+    while (root.firstChild) {
+        root.removeChild(root.firstChild)
+    }
+    render(root, letters)
+})
+
+document.getElementById('save').addEventListener('click', () => {
+    let allChildNodesArray = [...document.querySelector('#root').childNodes]
+    const output = allChildNodesArray.map(value => {
+        return value.outerHTML
+    })
+    output.shift()
+    localStorage.setItem('letters', JSON.stringify(output))
+})
 
 function dragover_handler(ev) {
     ev.preventDefault();
@@ -75,7 +94,7 @@ function renderParent(parent){
     root.setAttribute('class', 'letter-content')
     parent.appendChild(root)
     addEventListeners(root)
-    root.style.top = `${randomNumber(window.innerHeight-150)}px`
+    root.style.top = `${randomNumber(window.innerHeight-250)}px`
     root.style.left = `${randomNumber(window.innerWidth-150)}px`
     root.setAttribute('draggable', 'true')
     return root
@@ -106,6 +125,19 @@ function renderDropdown(parent, root){
 }
 
 function render(root, alphabet) {
+    if(localStorage.getItem('letters'))
+        {
+            console.log('localstorage found')
+            const rawLetterData = JSON.parse(localStorage.getItem('letters'))
+            console.log(rawLetterData)
+            rawLetterData.forEach(value => {
+                const newDiv = document.createElement('div')
+                newDiv.insertAdjacentHTML("beforeend", value)
+                root.append(newDiv)
+            })
+            return
+        }
+
     for(let i = 0; i<alphabet.length; i++){
         const parent = renderParent(root)
         const newLetter = generateLetter(alphabet[i], parent)
@@ -115,6 +147,5 @@ function render(root, alphabet) {
         counter++
     }
 }
-
 
 render(root, letters)
