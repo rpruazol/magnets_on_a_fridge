@@ -1,15 +1,31 @@
 'use strict'
 
+const letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
+let counter = 0;
 
-const alphabet = {
-    captitalLetters: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
-    lowerCaseLetters: ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-}
-
-const root = document.getElementById("root")
+const root = document.getElementById('root')
 root.ondrop = drop_handler;
 root.ondragover = dragover_handler;
+
+document.getElementById('reset').addEventListener('click', () => {
+    counter = 0;
+    console.log('reset')
+    localStorage.clear()
+    while (root.firstChild) {
+        root.removeChild(root.firstChild)
+    }
+    render(root, letters)
+})
+
+document.getElementById('save').addEventListener('click', () => {
+    let allChildNodesArray = [...document.querySelector('#root').childNodes]
+    const output = allChildNodesArray.map(value => {
+        return value.outerHTML
+    })
+    output.shift()
+    localStorage.setItem('letters', JSON.stringify(output))
+})
 
 function dragover_handler(ev) {
     ev.preventDefault();
@@ -21,15 +37,10 @@ function dragover_handler(ev) {
 function generateLetter(letter){
     const letterElement = document.createElement('p')
     letterElement.setAttribute('class', 'letter')
-    letterElement.setAttribute('draggable', 'true')
-    letterElement.setAttribute('id', letter)
     const newLetter = document.createTextNode(letter)
     letterElement.append(newLetter)
     letterElement.style.color = randomColor()
-    addEventListeners(letterElement)
-    letterElement.style.top = `${randomNumber(window.innerHeight-150)}px`
-    letterElement.style.left = `${randomNumber(window.innerWidth-150)}px`
-    
+
     return letterElement
 }
 
@@ -41,12 +52,7 @@ function randomNumber(max, min=0){
     return Math.floor(Math.random() * (max - min) + min)
 }
 
-function render() {
-    for(let i = 0; i<alphabet.captitalLetters.length; i++){
-        const newLetter = generateLetter(alphabet.captitalLetters[i])
-        root.appendChild(newLetter)
-    }
-}
+
 
 function addEventListeners(element) {
     element.addEventListener('dragstart', onDragStart);
@@ -56,6 +62,7 @@ function addEventListeners(element) {
 }
 
 function onDragStart(event) {
+    console.log(event)
     let target = event.target;
     var style = window.getComputedStyle(event.target, null);
     var targetValue = (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY) + ',' + target.id;
@@ -76,10 +83,72 @@ function drop_handler(event) {
         var targetData = event.dataTransfer.getData("text/plain").split(',');
         console.log(targetData)
         var dm = document.getElementById(targetData[2]);
+        console.log(dm)
         dm.style.left = (event.clientX + parseInt(targetData[0],10)) + 'px';
         dm.style.top = (event.clientY + parseInt(targetData[1],10)) + 'px';
         event.preventDefault();
         return false;
 }
 
-render()
+function renderParent(parent){
+    //letter-content === dropdown
+    const root = document.createElement('div')
+    root.setAttribute('class', 'letter-content')
+    parent.appendChild(root)
+    addEventListeners(root)
+    root.style.top = `${randomNumber(window.innerHeight-250)}px`
+    root.style.left = `${randomNumber(window.innerWidth-150)}px`
+    root.setAttribute('draggable', 'true')
+    return root
+}
+
+function renderDropdown(parent, root){
+    const divEl = document.createElement('div')
+    divEl.setAttribute('class', 'dropdown-content')
+    parent.appendChild(divEl)
+
+    const dupEl = document.createElement('a')
+    dupEl.textContent = '+'
+    dupEl.addEventListener("click", (() => {
+        // const cloned = parent.cloneNode(true)
+        // cloned.setAttribute('id', counter++ )
+        // root.appendChild(cloned)
+        console.log(parent.childNodes[0].textContent)
+        render(root, [parent.childNodes[0].textContent])
+    }))
+    divEl.appendChild(dupEl)
+
+    const removeEl = document.createElement('a')
+    removeEl.textContent = '-'
+    removeEl.addEventListener("click", (() => {
+        parent.remove()
+    }))
+    divEl.appendChild(removeEl)
+}
+
+function render(root, alphabet) {
+    if(localStorage.getItem('letters'))
+        {
+            console.log('localstorage found')
+            addEventListeners(root)
+            const rawLetterData = JSON.parse(localStorage.getItem('letters'))
+            console.log(rawLetterData)
+            rawLetterData.forEach(value => {
+                const newDiv = document.createElement('div')
+                newDiv.insertAdjacentHTML("beforeend", value)
+                root.append(newDiv)
+            })
+            return
+        }
+
+    for(let i = 0; i<alphabet.length; i++){
+        const parent = renderParent(root)
+        const newLetter = generateLetter(alphabet[i], parent)
+        parent.appendChild(newLetter)
+        renderDropdown(parent, root)
+        parent.setAttribute('id', counter++)
+        counter++
+    }
+}
+
+render(root, letters)
