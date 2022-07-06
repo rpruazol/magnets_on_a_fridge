@@ -132,20 +132,20 @@ function render(root, alphabet) {
             const rawLetterData = JSON.parse(localStorage.getItem('letters'))
             console.log(rawLetterData)
             rawLetterData.forEach(value => {
-                const newDiv = document.createElement('div')
-                newDiv.insertAdjacentHTML("beforeend", value)
-                root.append(newDiv)
+                root.insertAdjacentHTML("beforeend", value)
             })
             return
-        }
+        } else {
 
     for(let i = 0; i<alphabet.length; i++){
+        console.log('initial render')
         const parent = renderParent(root)
         const newLetter = generateLetter(alphabet[i], parent)
         parent.appendChild(newLetter)
         renderDropdown(parent, root)
         parent.setAttribute('id', counter++)
         counter++
+    }
     }
 }
 
